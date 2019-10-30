@@ -1,8 +1,8 @@
-﻿{
+{
   "id": "A516EAB5-3EEC-455E-8685-38A41606D2AC",
   "name": "ChangeAssemblyVersionsTask",
   "friendlyName": "Change Assembly Versions",
-  "description": "Allows to change/add AssemblyVersion, AssemblyFileVersion and AssemblyInformationalVersion in AssemblyInfo.cs files using a custom shema or from the build-number.",
+  "description": "Allows to change/add AssemblyVersion, AssemblyFileVersion and AssemblyInformationalVersion in AssemblyInfo.cs files using a custom schema or from the build-number.",
   "helpMarkDown": "No help available yet!",
   "category": "Utility",
   "visibility": [
@@ -11,9 +11,9 @@
   ],
   "author": "Jens Hofmann",
   "version": {
-    "Major": 1,
+    "Major": 3,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 0
   },
   "demands": [
     "DotNetFramework"
@@ -91,6 +91,36 @@
       "groupName": "AssemblyInformationalVersionGroup"
     },
     {
+      "name": "assemblyInformationalVersionCustomMissingPartDefault",
+      "type": "boolean",
+      "label": "Custom default for missing version group",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If any of the groups: major, minor, build or revision is not provided in the regex, the default is '0.'. By enabling this option, you can define your own default in the input field 'Default for missing version group'.",
+      "visibleRule": "assemblyInformationalVersionBehaviorString = BuildNumber",
+      "groupName": "AssemblyInformationalVersionGroup"
+    },
+    {
+      "name": "assemblyInformationalVersionMissingPartDefaultString",
+      "type": "string",
+      "label": "Default for missing version group",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "If any of the groups: major, minor, build or revision is not provided in the regex, this is the default for the part of the version.",
+      "visibleRule": "assemblyInformationalVersionBehaviorString = BuildNumber && assemblyInformationalVersionCustomMissingPartDefault = true",
+      "groupName": "AssemblyInformationalVersionGroup"
+    },
+    {
+      "name": "assemblyInformationalVersionMustExist",
+      "type": "boolean",
+      "label": "Fail if attribute does not exist",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the tasks if the AssemblyInformationVersion attribute does not exist in all matched files.",
+      "visibleRule": "assemblyInformationalVersionBehaviorString != None",
+      "groupName": "AssemblyInformationalVersionGroup"
+    },
+    {
       "name": "assemblyVersionBehaviorString",
       "type": "pickList",
       "label": "Versioning behavior",
@@ -125,6 +155,36 @@
       "groupName": "AssemblyVersionGroup"
     },
     {
+      "name": "assemblyVersionCustomMissingPartDefault",
+      "type": "boolean",
+      "label": "Custom default for missing version group",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If any of the groups: major, minor, build or revision is not provided in the regex, the default is '0.'. By enabling this option, you can define your own default in the input field 'Default for missing version group'.",
+      "visibleRule": "assemblyVersionBehaviorString = BuildNumber",
+      "groupName": "AssemblyVersionGroup"
+    },
+    {
+      "name": "assemblyVersionMissingPartDefaultString",
+      "type": "string",
+      "label": "Default for missing version group",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "If any of the groups: major, minor, build or revision is not provided in the regex, this is the default for the part of the version.",
+      "visibleRule": "assemblyVersionBehaviorString = BuildNumber && assemblyVersionCustomMissingPartDefault = true",
+      "groupName": "AssemblyVersionGroup"
+    },
+    {
+      "name": "assemblyVersionMustExist",
+      "type": "boolean",
+      "label": "Fail if attribute does not exist",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the tasks if the AssemblyVersion attribute does not exist in all matched files.",
+      "visibleRule": "assemblyVersionBehaviorString != None",
+      "groupName": "AssemblyVersionGroup"
+    },
+    {
       "name": "assemblyFileVersionBehaviorString",
       "type": "pickList",
       "label": "Versioning behavior",
@@ -133,7 +193,7 @@
       "helpMarkDown": "The behavior used for versioning",
       "options": {
         "None": "Keep defaults - do nothing",
-        "Custom": "Provide a static version or use Variables to define the version.",
+        "Custom": "Provide a static version or use variables to define the version.",
         "BuildNumber": "Extract the version from the Buildnumber using a regular expression"
       },
       "groupName": "AssemblyFileVersionGroup"
@@ -159,6 +219,36 @@
       "groupName": "AssemblyFileVersionGroup"
     },
     {
+      "name": "assemblyFileVersionCustomMissingPartDefault",
+      "type": "boolean",
+      "label": "Custom default for missing version group",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If any of the groups: major, minor, build or revision is not provided in the regex, the default is '0.'. By enabling this option, you can define your own default in the input field 'Default for missing version group'.",
+      "visibleRule": "assemblyFileVersionBehaviorString = BuildNumber",
+      "groupName": "AssemblyFileVersionGroup"
+    },
+    {
+      "name": "assemblyFileVersionMissingPartDefaultString",
+      "type": "string",
+      "label": "Default for missing version group",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "If any of the groups: major, minor, build or revision is not provided in the regex, this is the default for the part of the version.",
+      "visibleRule": "assemblyFileVersionBehaviorString = BuildNumber && assemblyFileVersionCustomMissingPartDefault = true",
+      "groupName": "AssemblyFileVersionGroup"
+    },
+    {
+      "name": "assemblyFileVersionMustExist",
+      "type": "boolean",
+      "label": "Fail if attribute does not exist",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the tasks if the AssemblyFileVersion attribute does not exist in all matched files.",
+      "visibleRule": "assemblyFileVersionBehaviorString != None",
+      "groupName": "AssemblyFileVersionGroup"
+    },
+    {
       "name": "searchDirectory",
       "type": "filePath",
       "label": "Directory",
@@ -181,14 +271,20 @@
       "defaultValue": "true",
       "required": true,
       "helpMarkDown": "Specify whether to do a recursive search for the file pattern"
+    },
+    {
+      "name": "overwriteReadOnly",
+      "type": "boolean",
+      "label": "Overwrite readonly",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Specify whether to overwrite read-only assembly version info files"
     }
   ],
   "instanceNameFormat": "Update versions in file '$(fileNamePattern)' of directory '$(searchDirectory)' - recursive: '$(recursiveSearch)' ",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\ChangeVersions.ps1",
-      "argumentFormat": "",
-      "workingDirectory": ""
+    "PowerShell3": {
+      "target": "$(currentDirectory)\\ChangeVersions.ps1"
     }
   }
 }
